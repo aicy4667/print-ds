@@ -71,11 +71,13 @@
             user-select: none;
         }
 
-        /* 下載狀態 */
-        .downloading .canvas-container {
-            box-shadow: none !important;
-            margin: 0 !important;
-            border: none !important;
+        /* 控制面板捲軸優化 */
+        .config-panel::-webkit-scrollbar {
+            width: 4px;
+        }
+        .config-panel::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -84,14 +86,41 @@
     <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
         
         <!-- 控制面板 -->
-        <div class="no-print w-full lg:w-96 shrink-0 space-y-4 bg-white p-6 rounded-xl shadow-sm border border-gray-200 h-fit max-h-[90vh] overflow-y-auto">
+        <div class="config-panel no-print w-full lg:w-96 shrink-0 space-y-4 bg-white p-6 rounded-xl shadow-sm border border-gray-200 h-fit max-h-[95vh] overflow-y-auto">
             <h2 class="text-xl font-bold mb-4 border-b pb-2">規格參數設定</h2>
             
             <div class="space-y-4">
                 <label class="block">
                     <span class="text-gray-700 text-sm font-medium">版本標題</span>
-                    <input type="text" id="in-title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2 text-sm focus:ring-blue-500 focus:border-blue-500" value="產品標籤規格書 v1.3">
+                    <input type="text" id="in-title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2 text-sm focus:ring-blue-500 focus:border-blue-500" value="產品標籤規格書 v1.5">
                 </label>
+
+                <!-- 設計稿上傳 -->
+                <div class="p-3 bg-blue-50 rounded-lg border border-blue-100 space-y-3">
+                    <span class="text-blue-700 text-sm font-bold block">上傳設計稿圖層</span>
+                    <input type="file" id="in-design-file" accept="image/*" class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer" />
+                    
+                    <div class="grid grid-cols-2 gap-2">
+                        <label class="block">
+                            <span class="text-gray-600 text-[10px] uppercase">透明度</span>
+                            <input type="range" id="in-img-opacity" min="0" max="1" step="0.1" value="1" class="w-full h-1 bg-blue-200 rounded-lg appearance-none cursor-pointer">
+                        </label>
+                        <label class="block">
+                            <span class="text-gray-600 text-[10px] uppercase">縮放比例</span>
+                            <input type="range" id="in-img-scale" min="0.1" max="3" step="0.05" value="1" class="w-full h-1 bg-blue-200 rounded-lg appearance-none cursor-pointer">
+                        </label>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <label class="block">
+                            <span class="text-gray-600 text-[10px] uppercase">水平位移 (X)</span>
+                            <input type="range" id="in-img-x" min="-200" max="200" step="1" value="0" class="w-full h-1 bg-blue-200 rounded-lg appearance-none cursor-pointer">
+                        </label>
+                        <label class="block">
+                            <span class="text-gray-600 text-[10px] uppercase">垂直位移 (Y)</span>
+                            <input type="range" id="in-img-y" min="-200" max="200" step="1" value="0" class="w-full h-1 bg-blue-200 rounded-lg appearance-none cursor-pointer">
+                        </label>
+                    </div>
+                </div>
                 
                 <div class="grid grid-cols-2 gap-3">
                     <label class="block">
@@ -120,10 +149,16 @@
                     </label>
                 </div>
 
-                <label class="block">
-                    <span class="text-gray-700 text-sm font-medium">印刷廠規格</span>
-                    <input type="text" id="in-printer-spec" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2 text-sm" value="捲裝 / 出標方向 3 號">
-                </label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="block">
+                        <span class="text-gray-700 text-sm font-medium">印刷廠規格</span>
+                        <input type="text" id="in-printer-spec" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2 text-sm" value="捲裝 / 出標 3 號">
+                    </label>
+                    <label class="block">
+                        <span class="text-gray-700 text-sm font-medium">發印日期</span>
+                        <input type="date" id="in-release-date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2 text-sm" value="">
+                    </label>
+                </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <label class="block">
@@ -149,38 +184,34 @@
 
                 <label class="block">
                     <span class="text-gray-700 text-sm font-medium">備註內容</span>
-                    <textarea id="in-remarks" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2 text-sm">1. 刀模規格圖
+                    <textarea id="in-remarks" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2 text-sm">1. 刀模規格圖
 2. 供印刷與內部核准使用
 3. 出貨請附裁切樣本</textarea>
                 </label>
 
-                <div class="pt-4 border-t">
-                    <p class="text-xs font-bold text-gray-400 mb-2 uppercase">顏色標示 (CMYK)</p>
-                    <div class="space-y-3">
-                        <div class="flex gap-2 items-center">
-                            <span class="text-[10px] bg-gray-100 p-1 rounded">1</span>
-                            <input type="text" id="in-c1-name" class="w-1/2 rounded border p-1 text-xs" value="深林綠">
-                            <input type="text" id="in-c1-cmyk" class="w-1/2 rounded border p-1 text-xs font-mono" value="C80 M20 Y100 K30">
+                <div class="pt-2 border-t">
+                    <p class="text-[10px] font-bold text-gray-400 mb-2 uppercase">顏色標示 (CMYK)</p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="flex gap-1 items-center">
+                            <input type="text" id="in-c1-name" class="w-full rounded border p-1 text-[10px]" value="深林綠">
+                            <input type="text" id="in-c1-cmyk" class="w-full rounded border p-1 text-[10px] font-mono" value="C80 M20 Y100 K30">
                         </div>
-                        <div class="flex gap-2 items-center">
-                            <span class="text-[10px] bg-gray-100 p-1 rounded">2</span>
-                            <input type="text" id="in-c2-name" class="w-1/2 rounded border p-1 text-xs" value="古銅金">
-                            <input type="text" id="in-c2-cmyk" class="w-1/2 rounded border p-1 text-xs font-mono" value="C20 M40 Y80 K10">
+                        <div class="flex gap-1 items-center">
+                            <input type="text" id="in-c2-name" class="w-full rounded border p-1 text-[10px]" value="古銅金">
+                            <input type="text" id="in-c2-cmyk" class="w-full rounded border p-1 text-[10px] font-mono" value="C20 M40 Y80 K10">
                         </div>
-                        <div class="flex gap-2 items-center">
-                            <span class="text-[10px] bg-gray-100 p-1 rounded">3</span>
-                            <input type="text" id="in-c3-name" class="w-1/2 rounded border p-1 text-xs" value="奶油白">
-                            <input type="text" id="in-c3-cmyk" class="w-1/2 rounded border p-1 text-xs font-mono" value="C0 M2 Y10 K0">
+                        <div class="flex gap-1 items-center">
+                            <input type="text" id="in-c3-name" class="w-full rounded border p-1 text-[10px]" value="奶油白">
+                            <input type="text" id="in-c3-cmyk" class="w-full rounded border p-1 text-[10px] font-mono" value="C0 M2 Y10 K0">
                         </div>
-                        <div class="flex gap-2 items-center">
-                            <span class="text-[10px] bg-gray-100 p-1 rounded">4</span>
-                            <input type="text" id="in-c4-name" class="w-1/2 rounded border p-1 text-xs" value="碳灰色">
-                            <input type="text" id="in-c4-cmyk" class="w-1/2 rounded border p-1 text-xs font-mono" value="C0 M0 Y0 K90">
+                        <div class="flex gap-1 items-center">
+                            <input type="text" id="in-c4-name" class="w-full rounded border p-1 text-[10px]" value="碳灰色">
+                            <input type="text" id="in-c4-cmyk" class="w-full rounded border p-1 text-[10px] font-mono" value="C0 M0 Y0 K90">
                         </div>
                     </div>
                 </div>
 
-                <button id="btn-download" class="w-full bg-emerald-600 text-white py-3 rounded-lg hover:bg-emerald-700 transition font-bold mt-6 shadow-md flex items-center justify-center gap-2">
+                <button id="btn-download" class="w-full bg-emerald-600 text-white py-3 rounded-lg hover:bg-emerald-700 transition font-bold mt-2 shadow-md flex items-center justify-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>
@@ -195,7 +226,7 @@
             <div class="canvas-container" id="printable-area">
                 <!-- 標題 -->
                 <div id="out-title" class="text-center text-3xl font-bold mb-8 tracking-widest border-b-[3px] border-black pb-4 uppercase">
-                    產品標籤規格書 v1.3
+                    產品標籤規格書 v1.5
                 </div>
 
                 <!-- 工程圖展示區 -->
@@ -206,6 +237,9 @@
                                 <path d="M 0 0 L 10 5 L 0 10 z" fill="#008080" />
                             </marker>
                         </defs>
+                        
+                        <!-- 背景設計稿圖層 -->
+                        <image id="svg-design-img" x="300" y="190" width="0" height="0" preserveAspectRatio="xMidYMid meet" opacity="1" transform="translate(0, 0) scale(1)" />
                         
                         <!-- 主體貼紙（藍色裁切線） -->
                         <rect id="rect-diecut" x="225" y="90" width="150" height="200" class="diecut-line" />
@@ -270,7 +304,9 @@
                     </tr>
                     <tr>
                         <th>印刷廠規格</th>
-                        <td id="td-printer-spec" colspan="3">捲裝 / 出標方向 3 號</td>
+                        <td id="td-printer-spec">捲裝 / 出標方向 3 號</td>
+                        <th>發印日期</th>
+                        <td id="td-release-date"></td>
                     </tr>
                     <tr>
                         <th>尺寸 (高度 x 寬度)</th>
@@ -309,32 +345,55 @@
 
     <script>
         const inputs = [
-            'in-title', 'in-width', 'in-height', 'in-name', 'in-company', 'in-quantity', 'in-printer-spec',
+            'in-title', 'in-width', 'in-height', 'in-name', 'in-company', 'in-quantity', 'in-printer-spec', 'in-release-date',
             'in-material', 'in-craft', 'in-film', 'in-color-mode', 'in-remarks',
-            'in-c1-name', 'in-c1-cmyk', 
-            'in-c2-name', 'in-c2-cmyk',
-            'in-c3-name', 'in-c3-cmyk',
-            'in-c4-name', 'in-c4-cmyk'
+            'in-c1-name', 'in-c1-cmyk', 'in-c2-name', 'in-c2-cmyk',
+            'in-c3-name', 'in-c3-cmyk', 'in-c4-name', 'in-c4-cmyk',
+            'in-img-opacity', 'in-img-scale', 'in-img-x', 'in-img-y'
         ];
+
+        let designImgSrc = null;
 
         /**
          * CMYK 轉 RGB 輔助函式
-         * @param {string} cmykStr 格式如 "C80 M20 Y100 K30"
          */
         function cmykToRgb(cmykStr) {
             const matches = cmykStr.match(/\d+/g);
             if (!matches || matches.length < 4) return "#f3f4f6";
-
             const [c, m, y, k] = matches.map(v => parseInt(v) / 100);
-            
             const r = Math.round(255 * (1 - c) * (1 - k));
             const g = Math.round(255 * (1 - m) * (1 - k));
             const b = Math.round(255 * (1 - y) * (1 - k));
-            
             return `rgb(${r}, ${g}, ${b})`;
         }
 
+        // 預設日期為今天
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('in-release-date').value = today;
+
+        // 處理設計稿上傳
+        document.getElementById('in-design-file').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                designImgSrc = event.target.result;
+                const img = new Image();
+                img.onload = function() {
+                    const svgImg = document.getElementById('svg-design-img');
+                    svgImg.setAttribute('href', designImgSrc);
+                    svgImg.setAttribute('width', img.width);
+                    svgImg.setAttribute('height', img.height);
+                    updateAll();
+                };
+                img.src = designImgSrc;
+            };
+            reader.readAsDataURL(file);
+        });
+
         function updateAll() {
+            // 文字同步
             const titleVal = document.getElementById('in-title').value;
             document.getElementById('out-title').innerText = titleVal;
             document.title = titleVal;
@@ -343,6 +402,7 @@
             document.getElementById('td-company').innerText = document.getElementById('in-company').value;
             document.getElementById('td-quantity').innerText = document.getElementById('in-quantity').value;
             document.getElementById('td-printer-spec').innerText = document.getElementById('in-printer-spec').value;
+            document.getElementById('td-release-date').innerText = document.getElementById('in-release-date').value;
             
             document.getElementById('td-material').innerText = document.getElementById('in-material').value;
             document.getElementById('td-craft').innerText = document.getElementById('in-craft').value;
@@ -352,91 +412,97 @@
             
             const w = parseFloat(document.getElementById('in-width').value) || 0;
             const h = parseFloat(document.getElementById('in-height').value) || 0;
-            
             document.getElementById('td-dim').innerText = `${h} x ${w} mm`;
             document.getElementById('dim-w-text').textContent = `${w} mm`;
             document.getElementById('dim-h-text').textContent = `${h} mm`;
 
+            // 顏色同步
             for(let i=1; i<=4; i++) {
                 const name = document.getElementById(`in-c${i}-name`).value;
                 const cmyk = document.getElementById(`in-c${i}-cmyk`).value;
-                
                 document.getElementById(`out-c${i}-name`).innerText = name;
                 document.getElementById(`out-c${i}-cmyk`).innerText = cmyk;
-                
-                const swatch = document.getElementById(`swatch-${i}`);
-                swatch.style.backgroundColor = cmykToRgb(cmyk);
+                document.getElementById(`swatch-${i}`).style.backgroundColor = cmykToRgb(cmyk);
             }
 
+            // 刀模圖形計算
             const baseScale = 2.5;
             const drawW = w * baseScale;
             const drawH = h * baseScale;
-            
-            const rect = document.getElementById('rect-diecut');
             const centerX = 300;
             const centerY = 190;
-            
             const newX = centerX - (drawW / 2);
             const newY = centerY - (drawH / 2);
             
+            const rect = document.getElementById('rect-diecut');
             rect.setAttribute('x', newX);
             rect.setAttribute('y', newY);
             rect.setAttribute('width', drawW);
             rect.setAttribute('height', drawH);
 
+            // 標註位置同步
             const dimWLine = document.getElementById('dim-w-line');
-            dimWLine.setAttribute('x1', newX);
-            dimWLine.setAttribute('x2', newX + drawW);
-            dimWLine.setAttribute('y1', newY - 40);
-            dimWLine.setAttribute('y2', newY - 40);
+            dimWLine.setAttribute('x1', newX); dimWLine.setAttribute('x2', newX + drawW);
+            dimWLine.setAttribute('y1', newY - 40); dimWLine.setAttribute('y2', newY - 40);
             document.getElementById('dim-w-text').setAttribute('x', centerX);
             document.getElementById('dim-w-text').setAttribute('y', newY - 55);
 
             const dimHLine = document.getElementById('dim-h-line');
-            dimHLine.setAttribute('x1', newX - 40);
-            dimHLine.setAttribute('x2', newX - 40);
-            dimHLine.setAttribute('y1', newY);
-            dimHLine.setAttribute('y2', newY + drawH);
+            dimHLine.setAttribute('x1', newX - 40); dimHLine.setAttribute('x2', newX - 40);
+            dimHLine.setAttribute('y1', newY); dimHLine.setAttribute('y2', newY + drawH);
             const dimHText = document.getElementById('dim-h-text');
-            dimHText.setAttribute('x', newX - 60);
-            dimHText.setAttribute('y', centerY);
+            dimHText.setAttribute('x', newX - 60); dimHText.setAttribute('y', centerY);
             dimHText.setAttribute('transform', `rotate(-90, ${newX - 60}, ${centerY})`);
 
             const guidePath = document.getElementById('guide-path');
             guidePath.setAttribute('d', `M ${newX + drawW} ${newY} L ${newX + drawW + 50} ${newY - 65} L ${newX + drawW + 80} ${newY - 65}`);
+
+            // 設計稿圖層微調
+            const svgImg = document.getElementById('svg-design-img');
+            if (designImgSrc) {
+                const opacity = document.getElementById('in-img-opacity').value;
+                const scale = document.getElementById('in-img-scale').value;
+                const offX = parseFloat(document.getElementById('in-img-x').value);
+                const offY = parseFloat(document.getElementById('in-img-y').value);
+                
+                svgImg.setAttribute('opacity', opacity);
+                const imgW = parseFloat(svgImg.getAttribute('width'));
+                const imgH = parseFloat(svgImg.getAttribute('height'));
+                const imgX = centerX - (imgW / 2) + offX;
+                const imgY = centerY - (imgH / 2) + offY;
+                
+                svgImg.setAttribute('x', imgX);
+                svgImg.setAttribute('y', imgY);
+                svgImg.setAttribute('transform', `scale(${scale})`);
+                svgImg.setAttribute('transform-origin', `${centerX + offX}px ${centerY + offY}px`);
+            }
         }
 
-        // 下載圖片功能
+        // 下載圖片
         document.getElementById('btn-download').addEventListener('click', async function() {
             const btn = this;
             const status = document.getElementById('status-text');
             const target = document.getElementById('printable-area');
             const originalTitle = document.getElementById('in-title').value;
-
             try {
                 btn.disabled = true;
                 btn.classList.add('opacity-50');
-                status.innerText = "圖片生成中，請稍候...";
-
+                status.innerText = "生成高品質圖片中...";
                 const canvas = await html2canvas(target, {
                     scale: 2,
                     useCORS: true,
                     backgroundColor: "#ffffff",
                     logging: false
                 });
-
                 const dataURL = canvas.toDataURL('image/png');
                 const link = document.createElement('a');
                 link.download = `${originalTitle || '貼紙刀模規格'}.png`;
                 link.href = dataURL;
                 link.click();
-
                 status.innerText = "下載成功！";
                 setTimeout(() => { status.innerText = ""; }, 3000);
-
             } catch (err) {
-                console.error(err);
-                status.innerText = "下載失敗，請嘗試使用螢幕截圖。";
+                status.innerText = "下載失敗，請嘗試手動截圖。";
             } finally {
                 btn.disabled = false;
                 btn.classList.remove('opacity-50');
