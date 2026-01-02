@@ -92,7 +92,7 @@
             <div class="space-y-4">
                 <label class="block">
                     <span class="text-gray-700 text-sm font-medium">版本標題</span>
-                    <input type="text" id="in-title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2 text-sm focus:ring-blue-500 focus:border-blue-500" value="產品標籤規格書 v1.7">
+                    <input type="text" id="in-title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2 text-sm focus:ring-blue-500 focus:border-blue-500" value="產品標籤規格書 v1.8">
                 </label>
 
                 <!-- 設計稿上傳 -->
@@ -100,24 +100,29 @@
                     <span class="text-blue-700 text-sm font-bold block">上傳設計稿圖層</span>
                     <input type="file" id="in-design-file" accept="image/*" class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer" />
                     
-                    <div class="grid grid-cols-2 gap-2">
+                    <div class="space-y-2">
                         <label class="block">
-                            <span class="text-gray-600 text-[10px] uppercase">透明度</span>
+                            <span class="text-gray-600 text-[10px] uppercase font-bold">透明度</span>
                             <input type="range" id="in-img-opacity" min="0" max="1" step="0.1" value="1" class="w-full h-1 bg-blue-200 rounded-lg appearance-none cursor-pointer">
                         </label>
+                        
                         <label class="block">
-                            <span class="text-gray-600 text-[10px] uppercase">縮放比例</span>
-                            <input type="range" id="in-img-scale" min="0.1" max="3" step="0.05" value="1" class="w-full h-1 bg-blue-200 rounded-lg appearance-none cursor-pointer">
+                            <span class="text-gray-600 text-[10px] uppercase font-bold">縮放比例</span>
+                            <div class="flex items-center gap-2">
+                                <input type="range" id="in-img-scale-slider" min="0.1" max="3" step="0.01" value="1" class="flex-grow h-1 bg-blue-200 rounded-lg appearance-none cursor-pointer">
+                                <input type="number" id="in-img-scale-num" min="0.01" max="10" step="0.01" value="1" class="w-16 rounded border-gray-300 p-1 text-xs shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            </div>
                         </label>
                     </div>
+
                     <div class="grid grid-cols-2 gap-2">
                         <label class="block">
-                            <span class="text-gray-600 text-[10px] uppercase">水平位移 (X)</span>
-                            <input type="range" id="in-img-x" min="-200" max="200" step="1" value="0" class="w-full h-1 bg-blue-200 rounded-lg appearance-none cursor-pointer">
+                            <span class="text-gray-600 text-[10px] uppercase font-bold">水平位移 (X)</span>
+                            <input type="range" id="in-img-x" min="-300" max="300" step="1" value="0" class="w-full h-1 bg-blue-200 rounded-lg appearance-none cursor-pointer">
                         </label>
                         <label class="block">
-                            <span class="text-gray-600 text-[10px] uppercase">垂直位移 (Y)</span>
-                            <input type="range" id="in-img-y" min="-200" max="200" step="1" value="0" class="w-full h-1 bg-blue-200 rounded-lg appearance-none cursor-pointer">
+                            <span class="text-gray-600 text-[10px] uppercase font-bold">垂直位移 (Y)</span>
+                            <input type="range" id="in-img-y" min="-300" max="300" step="1" value="0" class="w-full h-1 bg-blue-200 rounded-lg appearance-none cursor-pointer">
                         </label>
                     </div>
                 </div>
@@ -200,8 +205,8 @@
 3. 出貨請附裁切樣本</textarea>
                 </label>
 
-                <div class="pt-2 border-t">
-                    <p class="text-[10px] font-bold text-gray-400 mb-2 uppercase">顏色標示 (CMYK)</p>
+                <div class="pt-2 border-t text-center">
+                    <p class="text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-widest">顏色標示 (CMYK)</p>
                     <div class="grid grid-cols-2 gap-2">
                         <div class="flex gap-1 items-center">
                             <input type="text" id="in-c1-name" class="w-full rounded border p-1 text-[10px]" value="深林綠">
@@ -237,12 +242,12 @@
             <div class="canvas-container" id="printable-area">
                 <!-- 標題 -->
                 <div id="out-title" class="text-center text-3xl font-bold mb-8 tracking-widest border-b-[3px] border-black pb-4 uppercase">
-                    產品標籤規格書 v1.7
+                    產品標籤規格書 v1.8
                 </div>
 
                 <!-- 工程圖展示區 -->
                 <div class="flex flex-col items-center justify-center relative" style="height: 400px;">
-                    <svg id="spec-svg" width="100%" height="380" viewBox="0 0 600 380" class="mx-auto">
+                    <svg id="spec-svg" width="100%" height="380" viewBox="0 0 600 380" class="mx-auto overflow-hidden">
                         <defs>
                             <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                                 <path d="M 0 0 L 10 5 L 0 10 z" fill="#008080" />
@@ -366,7 +371,7 @@
             'in-material', 'in-craft', 'in-film', 'in-color-mode', 'in-remarks',
             'in-c1-name', 'in-c1-cmyk', 'in-c2-name', 'in-c2-cmyk',
             'in-c3-name', 'in-c3-cmyk', 'in-c4-name', 'in-c4-cmyk',
-            'in-img-opacity', 'in-img-scale', 'in-img-x', 'in-img-y'
+            'in-img-opacity', 'in-img-scale-slider', 'in-img-scale-num', 'in-img-x', 'in-img-y'
         ];
 
         let designImgSrc = null;
@@ -409,6 +414,19 @@
             reader.readAsDataURL(file);
         });
 
+        // 縮放比例雙向同步邏輯
+        const scaleSlider = document.getElementById('in-img-scale-slider');
+        const scaleNum = document.getElementById('in-img-scale-num');
+
+        scaleSlider.addEventListener('input', () => {
+            scaleNum.value = scaleSlider.value;
+            updateAll();
+        });
+        scaleNum.addEventListener('input', () => {
+            scaleSlider.value = scaleNum.value;
+            updateAll();
+        });
+
         function updateAll() {
             // 文字同步
             const titleVal = document.getElementById('in-title').value;
@@ -444,7 +462,7 @@
                 document.getElementById(`swatch-${i}`).style.backgroundColor = cmykToRgb(cmyk);
             }
 
-            // 刀模圖形計算
+            // 刀模圖形計算 (以 2.5 倍作為繪圖比例)
             const baseScale = 2.5;
             const drawW = w * baseScale;
             const drawH = h * baseScale;
@@ -480,13 +498,16 @@
             const svgImg = document.getElementById('svg-design-img');
             if (designImgSrc) {
                 const opacity = document.getElementById('in-img-opacity').value;
-                const scale = document.getElementById('in-img-scale').value;
-                const offX = parseFloat(document.getElementById('in-img-x').value);
-                const offY = parseFloat(document.getElementById('in-img-y').value);
+                // 優先抓取數字框，若無則抓取滑桿
+                const scale = parseFloat(scaleNum.value) || 1;
+                const offX = parseFloat(document.getElementById('in-img-x').value) || 0;
+                const offY = parseFloat(document.getElementById('in-img-y').value) || 0;
                 
                 svgImg.setAttribute('opacity', opacity);
+                
                 const imgW = parseFloat(svgImg.getAttribute('width'));
                 const imgH = parseFloat(svgImg.getAttribute('height'));
+                
                 const imgX = centerX - (imgW / 2) + offX;
                 const imgY = centerY - (imgH / 2) + offY;
                 
@@ -528,8 +549,10 @@
             }
         });
 
+        // 監聽所有輸入
         inputs.forEach(id => {
-            document.getElementById(id).addEventListener('input', updateAll);
+            const el = document.getElementById(id);
+            if(el) el.addEventListener('input', updateAll);
         });
 
         const now = new Date();
